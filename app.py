@@ -11,4 +11,4 @@ def village(uptime):
     return(asdict(village_from_uptime(uptime)))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0")
