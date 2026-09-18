@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, Response
-from Main import VillageState, get_uptime_and_build_village, village_from_uptime
+from Main import VillageState, get_uptime_and_build_village, village_from_uptime, get_metric_from_prometheus
 from dataclasses import dataclass, asdict
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 import requests
@@ -8,16 +8,18 @@ app = Flask(__name__)
 
 request_counter = Counter("app_request_total", "Total Requests Recieved")
 
-@app.route("/test-prometheus")
-def testprometheus():
-    response = requests.get("http://prometheus:9090/api/v1/query", params={"query": "up"})
-    data = response.json()
-    return str(data)
+@app.route("/metrics-test")
+def metricstest():
+    return str(get_metric_from_prometheus("up"))
 
 @app.route("/village-state/<int:uptime>")
 def village(uptime):
     request_counter.inc()
     return(asdict(village_from_uptime(uptime)))
+
+@app.route("/village-state-live")
+def villagestate():
+    return asdict(village_from_uptime(get_metric_from_prometheus("avg_over_time(up[5m]) * 100")))
 
 @app.route("/metrics")
 def metrics():
