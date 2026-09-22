@@ -24,7 +24,7 @@ def get_uptime_and_build_village():
     return village_from_uptime(temp)
 
 def get_metric_from_prometheus(query):
-    response = requests.get("http://prometheus:9090/api/v1/query", params={"query": query})
+    response = requests.get("http://village_prom:9090/api/v1/query", params={"query": query})
     data = response.json()
     return float(data["data"]["result"][0]["value"][1])
 
