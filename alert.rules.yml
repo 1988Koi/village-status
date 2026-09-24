@@ -1,0 +1,11 @@
+groups:
+  - name: village_allerts
+    rules:
+      - alert: ServiceDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "It's raining tonight."
+          description: "{{ $labels.job }} has been down for over 30 seconds"
