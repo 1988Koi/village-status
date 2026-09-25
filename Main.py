@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import requests
+import psycopg2
 
 @dataclass
 class VillageState:
@@ -28,5 +29,17 @@ def get_metric_from_prometheus(query):
     data = response.json()
     return float(data["data"]["result"][0]["value"][1])
 
+def get_db_connection():
+    conn = psycopg2.connect(
+    host="village-db",
+    dbname="postgres",
+    user="postgres",
+    password="password"
+)
+    return conn
+
 village = get_uptime_and_build_village()
 print(village) 
+
+conn = get_db_connection()
+print("Connected:", conn)

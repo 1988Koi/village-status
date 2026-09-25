@@ -15,6 +15,9 @@ resource "docker_network" "village_net" {
 
 resource "docker_image" "village_app" {
     name = "village-app:latest"
+    build {
+        context = "."
+    }
 }
 
 resource "docker_container" "village_app" {
